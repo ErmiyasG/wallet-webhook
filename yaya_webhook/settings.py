@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-fw8=t8&nv+5iw=)qk!)#fbiwsn+%ygl+vqn!-!-q_k90aw@(dc
 
 SIGNATURE_SECRET_KEY = config('SIGNATURE_SECRET_KEY')
 
+YAYA_TOLERANCE_SECONDS = 5
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
