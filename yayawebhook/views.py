@@ -3,8 +3,19 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import hmac
 import hashlib
+from decouple import config
 
-SECRET_KEY = "DxFWESD234sf3DE2Ngfg459Ff"
+SECRET_KEY = config("SIGNATURE_SECRET_KEY")
+
+def signatureMaker(payload: dict, secret_key: str) -> str:
+
+    concatnated_payload = "".join(str(each_values) for each_values in payload.values())
+    signed_payload = concatnated_payload.encode("utf-8")
+
+    #hashing the signed-payload
+    yaya_signature = hmac.new(secret_key.encode("utf-8"), signed_payload, hashlib.sha256).hexdigest()
+
+    return yaya_signature
 
 
 @csrf_exempt
@@ -15,18 +26,13 @@ def transaction_listener(request):
 
             #signature from the header
             signature_from_request = request.headers.get("YAYA-SIGNATURE")
+            
             if not signature_from_request: 
                 return JsonResponse({"error": "Signature is not found"}, status = 400)
             
+            actual_signature = signatureMaker(transaction_body, SECRET_KEY)
 
-            concatnated_payload = "".join(str(each_values) for each_values in transaction_body.values())
-            signed_payload = concatnated_payload.encode("utf-8")
-
-            #hashing the signed payload
-            yaya_signature = hmac.new(SECRET_KEY.encode("utf-8"), signed_payload, hashlib.sha256).hexdigest()
-
-                    
-            if not hmac.compare_digest(signature_from_request, yaya_signature):
+            if not hmac.compare_digest(signature_from_request, actual_signature):
                 return JsonResponse({"error": "Signature didn't match"}, status = 401)
 
             print("the received transaction info: ", transaction_body)
