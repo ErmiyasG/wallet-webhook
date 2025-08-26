@@ -27,6 +27,10 @@ SIGNATURE_SECRET_KEY = config('SIGNATURE_SECRET_KEY')
 
 YAYA_TOLERANCE_SECONDS = 5
 
+YAYA_IPS = [
+    "127.0.0.1"
+]
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
