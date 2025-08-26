@@ -9,6 +9,8 @@ from decouple import config
 
 SECRET_KEY = config("SIGNATURE_SECRET_KEY")
 
+YAYA_IPS = getattr(settings, "YAYA_IPS")
+
 def signatureMaker(payload: dict, secret_key: str) -> str:
 
     concatnated_payload = "".join(str(each_values) for each_values in payload.values())
@@ -24,6 +26,12 @@ def signatureMaker(payload: dict, secret_key: str) -> str:
 def transaction_listener(request):
     if request.method == "POST":
         try:
+
+            #verify ip
+            ip = request.META.get("REMOTE_ADDR")
+            if ip not in YAYA_IPS:
+                return JsonResponse({"error": "Unauthorized source IP"}, status = 401)
+            
             transaction_body = json.loads(request.body)
 
             #signature from the header
