@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-fw8=t8&nv+5iw=)qk!)#fbiwsn+%ygl+vqn!-!-q_k90aw@(dc
 
 SIGNATURE_SECRET_KEY = config('SIGNATURE_SECRET_KEY')
 
-YAYA_TOLERANCE_SECONDS = 5
+YAYA_TOLERANCE_SECONDS = 300
 
 YAYA_IPS = [
     "127.0.0.1"
